@@ -19,7 +19,7 @@ class Product:
     product_name: str
     quantity: int
 
-    def __str__(self):
+    def str(self):
         """Строковое представление продукта."""
         return f"Дата: {self.date}, Товар: '{self.product_name}', Количество: {self.quantity}"
 
@@ -101,6 +101,28 @@ def filtered_products(all_products, min_quantity, max_quantity):
     return formatted_products
 
 
+def sort_products_by_date(products: list[Product]) -> list[Product]:
+    """Сортирует продукты по дате (по возрастанию).
+
+    Args:
+        products (list[Product]): Список продуктов.
+
+    Returns:
+        list[Product]: Отсортированный список продуктов.
+    """
+    return sorted(products, key=lambda p: p.date)
+
+
+def display_products(products: list[Product]) -> None:
+    """Выводит список продуктов в консоль.
+
+    Args:
+        products (list[Product]): Список объектов Product для вывода.
+    """
+    for product in products:
+        print(product)
+
+
 def main():
     """Основная функция программы."""
     filename = "products.txt"
@@ -115,19 +137,38 @@ def main():
         all_products.append(product_obj)
         print(product_obj)
 
-    # Фильтрация по количеству
-    min_quantity = int(input("Введите минимальное количество: "))
-    max_quantity = int(input("Введите максимальное количество: "))
-    filtered = filtered_products(all_products, min_quantity, max_quantity)
-
-    if not filtered:
-        print("Нет продуктов, удовлетворяющих условиям фильтрации.")
+    # Меню выбора действия
+    print("\n1 — Вывести товары, отсортированные по дате")
+    print("2 — Вывести товары, отфильтрованные по количеству")
+    try:
+        choice = int(input("Выберите действие: "))
+    except ValueError:
+        print("Неверный выбор.")
         return
 
-    # Вывод результатов
-    for product in filtered:
-        print(product)
+if choice == 1:
+        sorted_products = sort_products_by_date(all_products)
+        print("\nТовары, отсортированные по дате:")
+        display_products(sorted_products)
+
+    elif choice == 2:
+        try:
+            min_quantity = int(input("Введите минимальное количество: "))
+            max_quantity = int(input("Введите максимальное количество: "))
+        except ValueError:
+            print("Количество должно быть целым числом.")
+            return
+
+        filtered = filtered_products(all_products, min_quantity, max_quantity)
+        if not filtered:
+            print("Нет товаров, удовлетворяющих условиям фильтрации.")
+        else:
+            print("\nОтфильтрованные товары:")
+            display_products(filtered)
+
+    else:
+        print("Неверный выбор.")
 
 
-if __name__ == "__main__":
+if name == "main":
     main()
